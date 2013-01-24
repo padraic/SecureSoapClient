@@ -3,6 +3,8 @@
 namespace alc;
 
 require_once dirname(__FILE__) . '/../alc/SecureSoapClient.php';
+use alc\SecureSoapClient;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -47,7 +49,7 @@ class SecureSoapClientTest extends \PHPUnit_Framework_TestCase {
      */
     public function testHttpsSoap()
     {
-        $Client = new \alc\SecureSoapClient('https://www.eway.com.au/gateway/rebill/test/manageRebill_test.asmx?WSDL', '/cache/');
+        $Client = new SecureSoapClient('https://www.eway.com.au/gateway/rebill/test/manageRebill_test.asmx?WSDL', '/cache/');
         $Params = array(
             'customerTitle' => 'Mr',
             'customerFirstName' => 'Test',
