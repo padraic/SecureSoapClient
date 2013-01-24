@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * @copyright Lee Conlin
+ * @copyright Lee Conlin (c) 2013
  * @license MIT
- * @author Lee Conlin <leeconlin@easywebstore.net>
+ * @author Lee Conlin <lee@wildkatz.org>
  */
 
 namespace alc;
@@ -30,8 +30,7 @@ namespace alc;
 /**
  * A SoapClient extension that implements secure-by-default methodology
  *
- * @author Lee Conlin <leeconlin@easywebstore.net>
- * @package EasyWebstore
+ * @author Lee Conlin <lee@wildkatz.org>
  */
 class SecureSoapClient extends \SoapClient {
 
