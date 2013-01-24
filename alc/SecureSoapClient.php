@@ -1,5 +1,5 @@
 <?php
-/**
+/** trigger a build
  * Copyright (C) 2012 EasyWebstore Limited
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
