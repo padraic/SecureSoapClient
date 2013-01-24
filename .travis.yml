@@ -1,0 +1,12 @@
+
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+notifications:
+  email:
+    - lee@wildkatz.org
+
+script: "phpunit ./"
