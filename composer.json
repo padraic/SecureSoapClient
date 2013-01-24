@@ -1,8 +1,27 @@
 
 {
     "name": "hades200082/secure-soap-client",
+    "description": "A secure by default SoapClient extension for PHP",
+    "keywords": ["soap", "soapclient", "security", "ssl"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lee Conlin",
+            "email": "lee@wildkatz.org",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/hades200082/SecureSoapClient/issues",
+        "source": "https://github.com/hades200082/SecureSoapClient"
+    },
     "require": {
         "php": ">=5.3.0",
         "lib-curl": ">=7.21.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "alc": "alc/"
+        }
     }
 }
