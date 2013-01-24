@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/hades200082/SecureSoapClient.png)](https://travis-ci.org/hades200082/SecureSoapClient)
+
 SecureSoapClient
 ================
 
