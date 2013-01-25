@@ -9,23 +9,44 @@ This ensures that any requests over **https** are actually secure by default.
 
 The class otherwise acts in exactly the same way as the native SoapClient.
 
+Requirements
+------------
+* PHP 5.3 or higher
+* cURL (tested on 7.21.7)
+
+Install
+-------
+
+### Via Composer ###
+Just add the following to the require section of your composer.json file
+
+```json
+"require": {
+    //...
+    "hades200082/secure-soap-client": "1.0.0",
+    //...
+}
+```
+
+This will install the version 1.0.0 tag.  If you want the very latest bleeding edge version change `"1.0.0"` to `dev-master`
+
+* https://packagist.org/packages/hades200082/secure-soap-client
+
+### Via Direct Download ###
+Download the [SecureSoapClient.php](https://github.com/hades200082/SecureSoapClient/blob/master/alc/SecureSoapClient.php) file from the repository and include it in your project.
+
 Usage
 -----
+You just instantiate this class instead.
+
 ```php
-$wsdl = 'http://www.webservicex.net/CurrencyConvertor.asmx?WSDL';
-
-// cache_path must be writeable by the web server.
-$cache_path = '/cache/'; // Optional. Defaults to './wsdl_cache/'.
-
-$Client = new \alc\SecureSoapClient($wsdl, $cache_path);
-
-$Params = array(
-    'FromCurrency' => 'GBP',
-    'ToCurrency' => 'USD'
-);
-$Response = $Client->ConversionRate($Params);
-$Rate = $Response->ConversionRateResult;
+$SoapClient = new \alc\SecureSoapClient($wsdl, $wsdl_cache_dir, $options);
 ```
+
+Then use it just like the native PHP `SoapClient` class.  
+
+* http://php.net/manual/en/class.soapclient.php
+* http://php.net/manual/en/soapclient.soapclient.php
 
 Found a bug?
 ============
@@ -36,4 +57,3 @@ If you can't fix it (or don't want to right now) please submit an issue report h
 Want to help?
 =============
 If you want to help improve this please submit a pull request.
-
