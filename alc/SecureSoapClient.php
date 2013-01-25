@@ -47,40 +47,44 @@ class SecureSoapClient extends \SoapClient {
      */
     public function __construct($wsdl, $cache_path = '/wsdl_cache/', $options = array())
     {
-        $this->cache_dir = __DIR__ . $cache_path;
+        if (!is_null($wsdl)) {
+            $this->cache_dir = __DIR__ . $cache_path;
 
-        if (!is_dir($this->cache_dir)) {
-            // Attempt to create it
-            if (!mkdir($this->cache_dir, 0777, true)) {
-                throw new Exception("Directory specified by \$cache_path ($this->cache_dir}) does not exist and could not be created.");
+            if (!is_dir($this->cache_dir)) {
+                // Attempt to create it
+                if (!mkdir($this->cache_dir, 0777, true)) {
+                    throw new Exception("Directory specified by \$cache_path ($this->cache_dir}) does not exist and could not be created.");
+                }
             }
-        }
 
-        $file = md5(uniqid()).'.xml';
+            $file = md5(uniqid()).'.xml';
 
-        if (($fp = fopen($this->cache_dir.$file, "w")) == false) {
-            throw new Exception('Could not create local WDSL file ('.$this->cache_dir.$file.')');
-        }
+            if (($fp = fopen($this->cache_dir.$file, "w")) == false) {
+                throw new Exception('Could not create local WDSL file ('.$this->cache_dir.$file.')');
+            }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $wsdl);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        if (($xml = curl_exec($ch)) === false) {
-            //curl_close($ch);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $wsdl);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            if (($xml = curl_exec($ch)) === false) {
+                //curl_close($ch);
+                fclose($fp);
+                unlink($this->cache_dir.$file);
+
+                throw new \Exception(curl_error($ch));
+            }
+
+            curl_close($ch);
             fclose($fp);
-            unlink($this->cache_dir.$file);
-
-            throw new Exception(curl_error($ch));
+            $wsdl = $this->cache_dir.$file;
         }
-
-        curl_close($ch);
-        fclose($fp);
-        $wsdl = $this->cache_dir.$file;
 
         parent::__construct($wsdl, $options);
 
-        unlink($this->cache_dir.$file);
+        if (!is_null($wsdl) && file_exists($this->cache_dir.$file)) {
+            unlink($this->cache_dir.$file);
+        }
     }
 
     /**
@@ -94,12 +98,15 @@ class SecureSoapClient extends \SoapClient {
     */
     protected function callCurl($url, $data,$action) {
 
-        $headers = array(
-            'Content-Type: text/xml; charset=utf-8',
-            'Accept: text/xml',
-            'SOAPAction: "' . $action . '"',
-            'Content-Length: '.strlen($data)
-        );
+        $headers = array();
+        $headers[] = 'Accept: text/xml';
+        if ($this->_soap_version == SOAP_1_1) {
+            $headers[] = 'Content-Type: text/xml; charset=utf-8';
+            $headers[] = 'SOAPAction: "' . $action . '"';
+        } elseif ($this->_soap_version == SOAP_1_2) {
+            $headers[] = 'Content-Type: application/soap+xml; charset=utf-8';
+        }
+        $headers[] = 'Content-Length: '.strlen($data);
 
         $handle   = curl_init();
         curl_setopt($handle, CURLOPT_HEADER, false);
@@ -134,6 +141,7 @@ class SecureSoapClient extends \SoapClient {
      */
     public function __doRequest($request,$location,$action,$version,$one_way = 0) {
 
+        $action = str_replace('#', '', $action);
         preg_match("/[^\/]+$/", $action, $matches);
         $short_action = $matches[0];
 
